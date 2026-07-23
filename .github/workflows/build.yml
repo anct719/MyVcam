@@ -15,21 +15,23 @@ jobs:
 
       - name: Install Theos
         run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
-      - name: Install SDK
+      - name: Download iOS 16.2 SDK
         run: |
-          cd $THEOS
-          curl -L https://github.com/xybp888/iOS-SDKs/releases/download/16.2/iPhoneOS16.2.sdk.zip -o sdk.zip
-          unzip -q sdk.zip -d sdks/
-          echo "THEOS_SDKS=$THEOS/sdks" >> $GITHUB_ENV
+          mkdir -p $HOME/theos/sdks
+          curl -L -o $HOME/theos/sdks/iPhoneOS16.2.sdk.zip \
+            "$(curl -s https://api.github.com/repos/xybp888/iOS-SDKs/releases/tags/16.2 | grep -o 'https://.*iPhoneOS16.2.sdk.zip[^"]*' | head -1)"
+          cd $HOME/theos/sdks && unzip -q iPhoneOS16.2.sdk.zip
+          echo "THEOS_SDKS=$HOME/theos/sdks" >> $GITHUB_ENV
 
-      - name: Build Tweak
+      - name: Build
         run: |
           cd MyVCAMTweak
+          make clean 2>/dev/null || true
           make package
-          echo "DEB=$(ls packages/*.deb)" >> $GITHUB_ENV
+          echo "DEB=$(ls packages/*.deb 2>/dev/null)" >> $GITHUB_ENV
 
       - name: Upload .deb
         uses: actions/upload-artifact@v4
