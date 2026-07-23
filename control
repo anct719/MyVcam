@@ -1,0 +1,9 @@
+Package: com.myvcam.tweak
+Name: MyVCAM
+Version: 1.0.0
+Architecture: iphoneos-arm64e
+Description: Replace iPhone camera feed with OBS/SplitCam stream via WebSocket
+Maintainer: MyVCAM
+Author: MyVCAM
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)

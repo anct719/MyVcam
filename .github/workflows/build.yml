@@ -1,0 +1,38 @@
+name: Build MyVCAM Tweak
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Theos
+        run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+
+      - name: Install SDK
+        run: |
+          cd $THEOS
+          curl -L https://github.com/xybp888/iOS-SDKs/releases/download/16.2/iPhoneOS16.2.sdk.zip -o sdk.zip
+          unzip -q sdk.zip -d sdks/
+          echo "THEOS_SDKS=$THEOS/sdks" >> $GITHUB_ENV
+
+      - name: Build Tweak
+        run: |
+          cd MyVCAMTweak
+          make package
+          echo "DEB=$(ls packages/*.deb)" >> $GITHUB_ENV
+
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: myvcam-tweak
+          path: MyVCAMTweak/packages/*.deb
