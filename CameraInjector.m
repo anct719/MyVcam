@@ -64,7 +64,6 @@ static void hook_BWNodeOutput_emitSampleBuffer(id self, SEL _cmd, CMSampleBuffer
 #pragma mark - FigCaptureClientSessionMonitor hook
 
 static void hook_FigCaptureClientSessionMonitor_handleNotification(id self, SEL _cmd, id notification) {
-    CameraInjector *inj = [CameraInjector sharedInstance];
     os_log(gLog, "FigCaptureClientSessionMonitor notification: %@", notification);
     orig_FigCaptureClientSessionMonitor_handleNotification(self, _cmd, notification);
 }
