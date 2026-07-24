@@ -27,7 +27,8 @@ jobs:
         run: |
           export THEOS="$RUNNER_TEMP/theos"
           echo "THEOS=$THEOS" >> "$GITHUB_ENV"
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install ldid xz
+          git clone --recursive --depth=1 --shallow-submodules https://github.com/theos/theos.git "$THEOS"
 
       - name: Build
         run: |
