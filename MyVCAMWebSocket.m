@@ -254,7 +254,7 @@ static void decodeCallback(void *outputRefCon, void *sourceRefCon, OSStatus stat
             [strong onDisconnected];
             return;
         }
-        if (msg.type == NSURLSessionWebSocketMessageTypeBinary) {
+        if (msg.type == NSURLSessionWebSocketMessageTypeData) {
             NSData *data = msg.data;
             if (data.length > 0) {
                 // Auto-detect: if it contains SPS, treat as config
@@ -384,14 +384,12 @@ static void decodeCallback(void *outputRefCon, void *sourceRefCon, OSStatus stat
     if (pos + ppsLen > extradata.length) return NO;
     const uint8_t *pps = bytes + pos;
 
-    const uint8_t *spsArray[1] = { sps };
-    const uint8_t *ppsArray[1] = { pps };
-    size_t spsSizes[1] = { spsLen };
-    size_t ppsSizes[1] = { ppsLen };
+    const uint8_t *parameterSets[2] = { sps, pps };
+    size_t parameterSetSizes[2] = { spsLen, ppsLen };
 
     CMVideoFormatDescriptionRef fmtDesc = NULL;
     OSStatus status = CMVideoFormatDescriptionCreateFromH264ParameterSets(
-        kCFAllocatorDefault, 1, spsArray, spsSizes, 1, ppsArray, ppsSizes, 4, &fmtDesc);
+        kCFAllocatorDefault, 2, parameterSets, parameterSetSizes, 4, &fmtDesc);
     if (status != noErr) {
         os_log_error(gLog, "CMVideoFormatDescriptionCreate failed: %d", (int)status);
         return NO;
@@ -427,9 +425,9 @@ static void decodeCallback(void *outputRefCon, void *sourceRefCon, OSStatus stat
     _formatDesc = fmtDesc;
     os_unfair_lock_unlock(&_sessionLock);
 
-    os_log(gLog, "VTDecompressionSession ready: %zux%zu",
-           CMVideoFormatDescriptionGetDimensions(fmtDesc).width,
-           CMVideoFormatDescriptionGetDimensions(fmtDesc).height);
+    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(fmtDesc);
+    os_log(gLog, "VTDecompressionSession ready: %dx%d",
+           dimensions.width, dimensions.height);
     return YES;
 }
 
