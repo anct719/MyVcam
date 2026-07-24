@@ -14,8 +14,6 @@ jobs:
   build:
     runs-on: macos-latest
     timeout-minutes: 30
-    env:
-      THEOS: ${{ runner.temp }}/theos
 
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +24,10 @@ jobs:
           xcodebuild -version
 
       - name: Install Theos
-        run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+        run: |
+          export THEOS="$RUNNER_TEMP/theos"
+          echo "THEOS=$THEOS" >> "$GITHUB_ENV"
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
 
       - name: Build
         run: |
