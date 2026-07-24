@@ -2,7 +2,6 @@
 #import <os/log.h>
 #import <os/lock.h>
 #import <objc/runtime.h>
-#import <IOSurface/IOSurface.h>
 #import <substrate.h>
 
 static os_log_t gLog;
