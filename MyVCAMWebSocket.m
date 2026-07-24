@@ -1,6 +1,13 @@
 #import "MyVCAMWebSocket.h"
 #import <VideoToolbox/VideoToolbox.h>
+#import <arpa/inet.h>
+#import <errno.h>
+#import <netinet/in.h>
+#import <netinet/tcp.h>
 #import <os/log.h>
+#import <os/lock.h>
+#import <sys/socket.h>
+#import <unistd.h>
 
 #define MVCM_MAGIC "MVCM"
 #define MSG_CONFIG 1

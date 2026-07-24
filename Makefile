@@ -1,4 +1,4 @@
-TARGET := iphone:clang:16.2:14.0
+TARGET := iphone:clang:16.5:14.0
 INSTALL_TARGET_PROCESSES := mediaserverd SpringBoard
 
 include $(THEOS)/makefiles/common.mk
@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = MyVCAM
 MyVCAM_FILES = Tweak.x MyVCAMWebSocket.m CameraInjector.m SpringBoardUI.m
 MyVCAM_CFLAGS = -fobjc-arc -I.
-MyVCAM_LDFLAGS = -framework Foundation -framework UIKit -framework CoreVideo -framework CoreMedia -framework VideoToolbox -framework IOSurface -framework Metal
+MyVCAM_LDFLAGS = -framework Foundation -framework UIKit -framework QuartzCore -framework CoreVideo -framework CoreMedia -framework VideoToolbox -framework IOSurface -framework Metal
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

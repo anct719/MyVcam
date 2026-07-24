@@ -7,25 +7,35 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      THEOS: ${{ runner.temp }}/theos
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Theos
+      - name: Show Xcode version
         run: |
-          git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          xcode-select -p
+          xcodebuild -version
+
+      - name: Install Theos
+        run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
 
       - name: Build
         run: |
-          cd MyVCAMTweak
-          make clean 2>/dev/null || true
-          make package
+          make clean
+          make package FINALPACKAGE=1
 
       - name: Upload .deb
         uses: actions/upload-artifact@v4
         with:
           name: myvcam-tweak
-          path: MyVCAMTweak/packages/*.deb
+          path: packages/*.deb
+          if-no-files-found: error

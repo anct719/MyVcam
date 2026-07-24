@@ -1,5 +1,6 @@
 #import "CameraInjector.h"
 #import <os/log.h>
+#import <os/lock.h>
 #import <objc/runtime.h>
 #import <IOSurface/IOSurface.h>
 #import <substrate.h>

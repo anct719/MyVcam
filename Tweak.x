@@ -3,6 +3,7 @@
 #import "SpringBoardUI.h"
 #import <os/log.h>
 #import <notify.h>
+#import <unistd.h>
 
 static os_log_t gLog;
 

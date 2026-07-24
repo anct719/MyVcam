@@ -1,4 +1,5 @@
 #import "SpringBoardUI.h"
+#import <QuartzCore/QuartzCore.h>
 #import <os/log.h>
 #import <notify.h>
 
